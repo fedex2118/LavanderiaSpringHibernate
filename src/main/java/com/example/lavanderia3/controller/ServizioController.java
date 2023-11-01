@@ -17,7 +17,7 @@ import com.example.lavanderia3.model.Servizio;
 import com.example.lavanderia3.service.ServizioService;
 
 @RestController
-@RequestMapping("/servizi")
+@RequestMapping("/servizio")
 public class ServizioController {
 
     @Autowired
@@ -39,8 +39,8 @@ public class ServizioController {
 
     // POST: Creare un nuovo servizio
     @PostMapping
-    public Servizio createServizio(@RequestBody Servizio servizio) {
-    	return servizioService.save(servizio);
+    public ResponseEntity<Servizio> createServizio(@RequestBody Servizio servizio) {
+    	return ResponseEntity.ok(servizioService.save(servizio));
     }
 
     // PUT: Modificare un servizio esistente

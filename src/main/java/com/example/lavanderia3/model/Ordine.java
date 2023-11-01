@@ -35,9 +35,11 @@ public class Ordine {
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
     
+	
+	// creiamo una tabella ponte tra ordini e servizi associati!
     @ManyToMany
     @JoinTable(
-        name = "Ordine_Servizio",
+        name = "ordine_servizio",
         joinColumns = @JoinColumn(name = "ordine_id"),
         inverseJoinColumns = @JoinColumn(name = "servizio_id")
     )

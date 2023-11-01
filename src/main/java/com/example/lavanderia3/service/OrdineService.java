@@ -12,6 +12,7 @@ import com.example.lavanderia3.model.Ordine;
 import com.example.lavanderia3.model.Servizio;
 import com.example.lavanderia3.repository.ClienteRepository;
 import com.example.lavanderia3.repository.OrdineRepository;
+import com.example.lavanderia3.repository.ServizioRepository;
 
 @Service
 public class OrdineService {
@@ -21,20 +22,42 @@ public class OrdineService {
 	
 	@Autowired
     private ClienteRepository clienteRepository;
+	
+	@Autowired
+    private ServizioRepository servizioRepository;
 
     // Salvare un ordine
     public Ordine save(Ordine ordine, Long clienteId) {
     	Set<Servizio> servizi = ordine.getServizi();
     	Cliente cliente = clienteRepository.findById(clienteId).orElse(null);
     	
-    	if(cliente == null || servizi.isEmpty()) 
+    	if(cliente == null || servizi.isEmpty()) {
+    		System.err.println("Cliente non esiste oppure non hai aggiunto servizi!");
     		return null;
+    	}
     	
     	double costoTotale = 0.0;
     	
     	for(Servizio s: servizi) {
+    		// L'id va sempre messo nel body per funzionare altrimenti abbiamo errore!
+    		Servizio serv = servizioRepository.findById(s.getId()).orElse(null);
+    		
+    		if(serv == null) {
+    			System.err.println("Errore: uno dei servizi nel body ha un id che non esiste...");
+    			System.err.println("...oppure non c'era un id nel body della richiesta!");
+    			return null;
+    		}
+    		
+    		s.setCosto(serv.getCosto());
+    		s.setTipoServizio(serv.getTipoServizio());
+    		s.setTempoEsecuzione(serv.getTempoEsecuzione());
+    	}
+    	
+    	for(Servizio s: servizi) {
     		costoTotale += s.getCosto();
     	}
+    	
+    	// si potrebbero gestire dataConsegna e dataRitiro...
     	
     	Ordine o = new Ordine();
     	o.setId(ordine.getId());

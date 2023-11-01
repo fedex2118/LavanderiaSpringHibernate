@@ -19,7 +19,7 @@ import com.example.lavanderia3.model.Ordine;
 import com.example.lavanderia3.service.OrdineService;
 
 @RestController
-@RequestMapping("/ordini")
+@RequestMapping("/ordine")
 public class OrdineController {
 
     @Autowired
@@ -42,10 +42,6 @@ public class OrdineController {
     // POST: Creare un nuovo ordine
     @PostMapping
     public ResponseEntity<Ordine> createOrdine(@RequestBody Ordine ordine, @RequestParam Long clienteId) {
-        Cliente cliente = new Cliente();
-    	if(ordine.getCliente() == null) {
-        	ordine.setCliente(cliente);
-        }
     	return ResponseEntity.ok(ordineService.save(ordine, clienteId));
     }
 
